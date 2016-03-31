@@ -1,4 +1,4 @@
-define(["jquery"],function($){
+define(["jquery","mapping"],function($,mapping){
 	var controls= controls || {};
 
 	controls.setupToggleCtrl=function(map,heatmap){
@@ -49,11 +49,22 @@ define(["jquery"],function($){
 			 heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
 		});
 	}
-	controls.setupControls=function(map,heatmap){
+	controls.setupClickCtrl=function(map,magicArray){
+		map.addListener('click', function(evt) {
+			var lat=evt.latLng.lat();
+			var lon=evt.latLng.lng();
+			gaus1=mapping.genGaussian(lat,lon,.02,0,.2,100);
+			for(var i=0; i<gaus1.length;i+=1){
+				magicArray.push(gaus1[i]);
+			}
+		});
+	}
+	controls.setupControls=function(map,heatmap,magicArray){
 		controls.setupGradientCtrl(map,heatmap);
 		controls.setupOpacityCtrl(map,heatmap);
 		controls.setupRadiusCtrl(map,heatmap);
 		controls.setupToggleCtrl(map,heatmap);
+		controls.setupClickCtrl(map,magicArray);
 	}
 	return controls
 });

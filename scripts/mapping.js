@@ -19,25 +19,14 @@ define([],function(){
         }
         return points;
       }
-      mapping.gaussianPoints=function(){
-        var points=[];
-        var range=.04;
-        var min_x=43.04;
-        var min_y=-87.93;
+      mapping.genGaussian=function(min_x,min_y,range,center,sig,num){
+		var points=[];
+		var seed=42;
+        var rnd_gen=new Random();
 
-        var seed=42;
-        var rnd_gen=new Random(seed);
-
-        for (var i=0; i<100; i+=1){
-          rand_lat=rnd_gen.normal(.5,.2)*range;
-          rand_lon=rnd_gen.normal(.5,.2)*range;
-          new_x=rand_lat+min_x;
-          new_y=rand_lon+min_y;
-          points.push(new google.maps.LatLng(new_x, new_y));
-        }
-        for (var i=0; i<200; i+=1){
-          rand_lat=rnd_gen.normal(.5,.05)*range;
-          rand_lon=rnd_gen.normal(.5,.05)*range;
+        for (var i=0; i<num; i+=1){
+          rand_lat=rnd_gen.normal(center,sig)*range;
+          rand_lon=rnd_gen.normal(center,sig)*range;
           new_x=rand_lat+min_x;
           new_y=rand_lon+min_y;
           points.push(new google.maps.LatLng(new_x, new_y));
@@ -45,8 +34,22 @@ define([],function(){
         return points;
       }
 
+      mapping.gaussianPoints=function(){
+        var range=.04;
+        var min_x=43.04;
+        var min_y=-87.93;
+
+        gaus1=mapping.genGaussian(min_x,min_y,range,.5,.2,100);
+        gaus2=mapping.genGaussian(min_x,min_y,range,.5,.02,100);
+        gaus3=mapping.genGaussian(min_x,min_y,range,.4,.2,100);
+        gaus4=mapping.genGaussian(min_x,min_y,range,.4,.04,100);
+        var points=$.merge($.merge($.merge(gaus1,gaus2),gaus3),gaus4);
+        return points;
+      }
+
 	mapping.getPoints=function() {
-	return mapping.gaussianPoints();
+	// return mapping.uniformPoints();
+		return mapping.gaussianPoints();
 	}
 
 	mapping.initMap= function() {
@@ -115,9 +118,15 @@ define([],function(){
 	        map.setZoom(15.0);
 	        return map
 	      }
-	mapping.initHeatMap=function(map){
+	mapping.initPoints=function(){
+		// var points=mapping.getPoints();
+		var points=[];
+		var magicArray = new google.maps.MVCArray(points);
+		return magicArray;
+	}
+	mapping.initHeatMap=function(map,magicArray){
 		var heatmap = new google.maps.visualization.HeatmapLayer({
-          "data": mapping.getPoints(),
+          "data": magicArray,
           "map": map
         });
         return heatmap;
