@@ -62,6 +62,15 @@ define([],function(){
 	        { "visibility": "off" }
 		]
 		},
+		{
+		  "featureType":"water",
+		  "elementType":"labels",
+		  "stylers":[
+		     {
+		        "visibility":"off"
+		     }
+		  ]
+		},
 		  {
 		  "featureType":"road.highway",
 		  "elementType":"all",
@@ -107,15 +116,17 @@ define([],function(){
 	        var customMapTypeId = 'no-detail';
 
 	        var map = new google.maps.Map(document.getElementById('map'), {
-	          zoom: 12,
-	          center: {lat: 43.06, lng: -87.901},
+	          zoom: 17,
+	          center: {lat: 43.103145, lng: -87.995081},
+	          zoomControl:false,
+	          scrollwheel: false,
 	          mapTypeControlOptions: {
 	            mapTypeIds: [google.maps.MapTypeId.SATELLITE, customMapTypeId]
 	          }
 	        });
 	        map.mapTypes.set(customMapTypeId, customMapType);
 	        map.setMapTypeId(customMapTypeId);
-	        map.setZoom(15.0);
+	        // map.setZoom(12.0);
 	        return map
 	      }
 	mapping.initPoints=function(){
@@ -129,6 +140,7 @@ define([],function(){
           "data": magicArray,
           "map": map
         });
+        heatmap.set('radius',20);
         return heatmap;
 	}
 	return mapping;
