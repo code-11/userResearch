@@ -118,8 +118,8 @@ define([],function(){
 	        var map = new google.maps.Map(document.getElementById('map'), {
 	          zoom: 17,
 	          center: {lat: 43.103145, lng: -87.995081},
-	          zoomControl:false,
-	          scrollwheel: false,
+	          // zoomControl:false,
+	          // scrollwheel: false,
 	          mapTypeControlOptions: {
 	            mapTypeIds: [google.maps.MapTypeId.SATELLITE, customMapTypeId]
 	          }

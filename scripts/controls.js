@@ -193,34 +193,34 @@ define(["jquery","mapping"],function($,mapping){
 	}
 	controls.setupGradientCtrl=function(map,heatmap){
 		$("#gradient").click(function(){
-			// var gradient = [
-	  //         'rgba(255, 255, 255, 0)',
-	  //         'rgba(255, 255, 255, 1)',
-	  //         'rgba(200, 200, 255, 1)',
-	  //         'rgba(100, 100, 255, 1)',
-	  //         'rgba(40, 40, 255, 1)',
-	  //         'rgba(0, 0, 255, 1)',
-	  //         'rgba(0, 0, 210, 1)',
-	  //         'rgba(0, 0, 160, 1)',
+			var gradient = [
+	          'rgba(255, 255, 255, 0)',
+	          'rgba(255, 255, 255, 1)',
+	          'rgba(200, 200, 255, 1)',
+	          'rgba(100, 100, 255, 1)',
+	          'rgba(40, 40, 255, 1)',
+	          'rgba(0, 0, 255, 1)',
+	          'rgba(0, 0, 210, 1)',
+	          'rgba(0, 0, 160, 1)',
 	  //         // 'rgba(0, 0, 80, 1)'
 	  //         // 'rgba(0, 0, 40, 1)'
 	  //         // 'rgba(0, 0, 10, 1)'
 	  //         // 'rgba(0, 0, 0, 1)'
-   //      ]
-   			var gradient = [
-	          'rgba(255, 255, 255, 0)',
-	          'rgba(255, 255, 255, 1)',
-	          'rgba(255, 200, 200, 1)',
-	          'rgba(255, 100, 100, 1)',
-	          'rgba(255, 40, 40, 1)',
-	          'rgba(255, 0, 0, 1)',
-	          'rgba(210, 0, 0, 1)',
-	          'rgba(160, 0, 0, 1)',
-	          // 'rgba(0, 0, 80, 1)'
-	          // 'rgba(0, 0, 40, 1)'
-	          // 'rgba(0, 0, 10, 1)'
-	          // 'rgba(0, 0, 0, 1)'
         ]
+   			// var gradient = [
+	     //      'rgba(255, 255, 255, 0)',
+	     //      'rgba(255, 255, 255, 1)',
+	     //      'rgba(255, 200, 200, 1)',
+	     //      'rgba(255, 100, 100, 1)',
+	     //      'rgba(255, 40, 40, 1)',
+	     //      'rgba(255, 0, 0, 1)',
+	     //      'rgba(210, 0, 0, 1)',
+	     //      'rgba(160, 0, 0, 1)',
+	     //      // 'rgba(0, 0, 80, 1)'
+	     //      // 'rgba(0, 0, 40, 1)'
+	     //      // 'rgba(0, 0, 10, 1)'
+	     //      // 'rgba(0, 0, 0, 1)'
+      //   ]
         heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
 
 
@@ -238,12 +238,24 @@ define(["jquery","mapping"],function($,mapping){
 	}
 	controls.setupClickCtrl=function(map,magicArray){
 		var mapLabelFunc=provideMapLabel();
+		I=true;
 		map.addListener('click', function(evt) {
 			var lat=evt.latLng.lat();
 			var lon=evt.latLng.lng();
 			var type=$("#map-type").val();
 			console.log(lat+","+lon);
-			gaus1=mapping.genGaussian(lat,lon,.005,0,.2,100);	
+
+			var spread=0;
+			if (I ==false){
+				spread=.03;
+				I=true;
+			}
+			else{
+				spread=.005;
+				I=false;
+			}
+			// var spread=2;
+			gaus1=mapping.genGaussian(lat,lon,spread,0,.2,100);	
 			for(var i=0; i<gaus1.length;i+=1){
 				if (type=="heatmap"){
 					magicArray.push(gaus1[i]);
@@ -253,6 +265,7 @@ define(["jquery","mapping"],function($,mapping){
 					  strokeOpacity: 0,
 					  // strokeWeight: 2,
 					  fillColor: '#FF0000',
+					  // fillColor:"#0000cc",
 					  fillOpacity: 0.35,
 					  map: map,
 					  center: gaus1[i],
