@@ -1,6 +1,6 @@
 define(["jquery","mapping"],function($,mapping){
 	var controls= controls || {};
-
+	DOTS=[]
 
 	//TODO: COULD BE REFACTORED INTO ANOTHER REQUIREJS FRAGMENT 
 	function provideMapLabel(){
@@ -192,8 +192,13 @@ define(["jquery","mapping"],function($,mapping){
 		});
 	}
 	controls.setupGradientCtrl=function(map,heatmap){
+		GRADIENTNUM=0;
 		$("#gradient").click(function(){
-			var gradient = [
+			if (GRADIENTNUM==0){
+				var gradient=null;
+				GRADIENTNUM=1;
+			}else if (GRADIENTNUM==1){
+				var gradient = [
 	          'rgba(255, 255, 255, 0)',
 	          'rgba(255, 255, 255, 1)',
 	          'rgba(200, 200, 255, 1)',
@@ -201,29 +206,31 @@ define(["jquery","mapping"],function($,mapping){
 	          'rgba(40, 40, 255, 1)',
 	          'rgba(0, 0, 255, 1)',
 	          'rgba(0, 0, 210, 1)',
-	          'rgba(0, 0, 160, 1)',
-	  //         // 'rgba(0, 0, 80, 1)'
-	  //         // 'rgba(0, 0, 40, 1)'
-	  //         // 'rgba(0, 0, 10, 1)'
-	  //         // 'rgba(0, 0, 0, 1)'
-        ]
-   			// var gradient = [
-	     //      'rgba(255, 255, 255, 0)',
-	     //      'rgba(255, 255, 255, 1)',
-	     //      'rgba(255, 200, 200, 1)',
-	     //      'rgba(255, 100, 100, 1)',
-	     //      'rgba(255, 40, 40, 1)',
-	     //      'rgba(255, 0, 0, 1)',
-	     //      'rgba(210, 0, 0, 1)',
-	     //      'rgba(160, 0, 0, 1)',
-	     //      // 'rgba(0, 0, 80, 1)'
-	     //      // 'rgba(0, 0, 40, 1)'
-	     //      // 'rgba(0, 0, 10, 1)'
-	     //      // 'rgba(0, 0, 0, 1)'
-      //   ]
-        heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
+	          'rgba(0, 0, 160, 1)'];
+	          	GRADIENTNUM=2;
 
-
+			}else if (GRADIENTNUM==2){
+				var gradient = [
+	          'rgba(255, 255, 255, 0)',
+	          'rgba(255, 255, 255, 1)',
+	          'rgba(255, 200, 200, 1)',
+	          'rgba(255, 100, 100, 1)',
+	          'rgba(255, 40, 40, 1)',
+	          'rgba(255, 0, 0, 1)',
+	          'rgba(210, 0, 0, 1)',
+	          'rgba(160, 0, 0, 1)'];
+	          	GRADIENTNUM=0;
+			}
+        // heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
+        	heatmap.set('gradient',gradient);
+        	if (GRADIENTNUM==1 || GRADIENTNUM==2){
+        		var color='#FF0000';
+        	}else{
+        		var color="#0000cc";
+        	}
+    		for(var i=0;i<DOTS.length;i+=1){
+    			DOTS[i].setOptions({fillColor: color});
+    		}
 		});
 	}
 	controls.setupRadiusCtrl=function(map,heatmap){
@@ -236,23 +243,25 @@ define(["jquery","mapping"],function($,mapping){
 			 heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
 		});
 	}
-	controls.setupClickCtrl=function(map,magicArray){
-		var mapLabelFunc=provideMapLabel();
-		I=true;
-		map.addListener('click', function(evt) {
+	controls.doClick=function(evt,magicArray,map) {
+			var mapLabelFunc=provideMapLabel();
 			var lat=evt.latLng.lat();
 			var lon=evt.latLng.lng();
 			var type=$("#map-type").val();
-			console.log(lat+","+lon);
+			console.log(lat+","+lon+","+map.getZoom());
 
 			var spread=0;
-			if (I ==false){
-				spread=.03;
-				I=true;
+			if (I ==0){
+				spread=.02;
+				I=1;
 			}
-			else{
+			else if (I==1){
+				spread=.01;
+				I=2;
+			}
+			else if (I==2){
 				spread=.005;
-				I=false;
+				I=0;
 			}
 			// var spread=2;
 			gaus1=mapping.genGaussian(lat,lon,spread,0,.2,100);	
@@ -271,6 +280,7 @@ define(["jquery","mapping"],function($,mapping){
 					  center: gaus1[i],
 					  radius: 10
 					});
+					DOTS.push(cityCircle);
 				}else if (type=="percents"){
 					var color="#000000";
 					if (i>30){
@@ -295,9 +305,13 @@ define(["jquery","mapping"],function($,mapping){
 					}
 				}
 			}
-		});
+		}
+
+	controls.setupClickCtrl=function(map,magicArray){
+		I=0;
+		map.addListener('click',function(evt){controls.doClick(evt,magicArray,map)});
 	}
-	controls.setupControls=function(map,heatmap,magicArray){
+	controls.setupControls=function(map,heatmap,magicArray,magicArray2){
 		controls.setupGradientCtrl(map,heatmap);
 		controls.setupOpacityCtrl(map,heatmap);
 		controls.setupRadiusCtrl(map,heatmap);
