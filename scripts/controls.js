@@ -263,45 +263,47 @@ define(["jquery","mapping"],function($,mapping){
 				spread=.005;
 				I=0;
 			}
+
 			// var spread=2;
-			gaus1=mapping.genGaussian(lat,lon,spread,0,.2,100);	
-			for(var i=0; i<gaus1.length;i+=1){
-				if (type=="heatmap"){
-					magicArray.push(gaus1[i]);
-				}else if (type=="dots"){
-					var cityCircle = new google.maps.Circle({
-					  // strokeColor: '#FF0000',
-					  strokeOpacity: 0,
-					  // strokeWeight: 2,
-					  fillColor: '#FF0000',
-					  // fillColor:"#0000cc",
-					  fillOpacity: 0.35,
-					  map: map,
-					  center: gaus1[i],
-					  radius: 10
-					});
-					DOTS.push(cityCircle);
-				}else if (type=="percents"){
-					var color="#000000";
-					if (i>30){
-						color="#cc9900";
-					}
-					if (i>60){
-						color="#FF6600";	
-					}
-					if (i>75){
-						color="#FF0000";
-					}
-					if (i%10==0){
-						var percent = new mapLabelFunc({
-					  		position: gaus1[i],
-					  		text: (i/(10))+"%",
-					  		map:map,
-					  		fontSize:25,
-					  		// fontColor:"rgb("+i*(100)+"0,0)"
-							// fontColor: (i>30) ? ((i>60) ? ((i>75) ? : "#FF0000") :"#FF6633") : "#000000"
-							fontColor:color
+			if (type=="percents"){
+				var i = Math.round(Math.random()*100);
+				var color="#000000";
+				if (i>30){
+					color="#cc9900";
+				}
+				if (i>60){
+					color="#FF6600";	
+				}
+				if (i>75){
+					color="#FF0000";
+				}
+				var percent = new mapLabelFunc({
+			  		position:evt.latLng,
+			  		text: (i/(10))+"%",
+			  		map:map,
+			  		fontSize:25,
+			  		// fontColor:"rgb("+i*(100)+"0,0)"
+					// fontColor: (i>30) ? ((i>60) ? ((i>75) ? : "#FF0000") :"#FF6633") : "#000000"
+					fontColor:color
+				});	
+			}else{	
+				gaus1=mapping.genGaussian(lat,lon,spread,0,.2,100);	
+				for(var i=0; i<gaus1.length;i+=1){
+					if (type=="heatmap"){
+						magicArray.push(gaus1[i]);
+					}else if (type=="dots"){
+						var cityCircle = new google.maps.Circle({
+						  // strokeColor: '#FF0000',
+						  strokeOpacity: 0,
+						  // strokeWeight: 2,
+						  fillColor: '#FF0000',
+						  // fillColor:"#0000cc",
+						  fillOpacity: 1,
+						  map: map,
+						  center: gaus1[i],
+						  radius: 8
 						});
+						DOTS.push(cityCircle);
 					}
 				}
 			}
