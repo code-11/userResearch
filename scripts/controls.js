@@ -201,15 +201,23 @@ define(["jquery","mapping"],function($,mapping){
 				var gradient = [
 	          'rgba(255, 255, 255, 0)',
 	          'rgba(255, 255, 255, 1)',
-	          'rgba(200, 200, 255, 1)',
-	          'rgba(100, 100, 255, 1)',
-	          'rgba(40, 40, 255, 1)',
+	          'rgba(170, 255, 255, 1)',
+	          'rgba(80, 170, 255, 1)',
+	          'rgba(0, 80, 255, 1)',
 	          'rgba(0, 0, 255, 1)',
-	          'rgba(0, 0, 210, 1)',
-	          'rgba(0, 0, 160, 1)'];
+	          'rgba(0, 0, 100, 1)'];
 	          	GRADIENTNUM=2;
 
 			}else if (GRADIENTNUM==2){
+				/*
+			  'rgba(255, 255, 255, 0)',
+	          'rgba(255, 255, 255, 1)',
+	          'rgba(255, 200, 200, 1)',
+	          'rgba(255, 100, 100, 1)',
+	          'rgba(255, 40, 40, 1)',
+	          'rgba(255, 0, 0, 1)',
+	          'rgba(160, 0, 0, 1)'];
+				*/
 				var gradient = [
 	          'rgba(255, 255, 255, 0)',
 	          'rgba(255, 255, 255, 1)',
@@ -217,9 +225,35 @@ define(["jquery","mapping"],function($,mapping){
 	          'rgba(255, 100, 100, 1)',
 	          'rgba(255, 40, 40, 1)',
 	          'rgba(255, 0, 0, 1)',
-	          'rgba(210, 0, 0, 1)',
+	          'rgba(100, 0, 0, 1)'];
+	          	GRADIENTNUM=3;
+			}else if (GRADIENTNUM==3){
+				var gradient = [
+	          'rgba(255, 255, 255, 0)',
+	          'rgba(255, 255, 255, 1)',
+	          'rgba(255, 200, 200, 1)',
+	          'rgba(255, 100, 100, 1)',
+	          'rgba(255, 40, 40, 1)',
+	          'rgba(255, 0, 0, 1)',
 	          'rgba(160, 0, 0, 1)'];
-	          	GRADIENTNUM=0;
+			  var gradient = [
+			    'rgba(255, 255, 255, 0)',
+			    'rgba(200, 255, 255, 1)',
+			    'rgba(100, 255, 255, 1)',
+			    'rgba(0, 255, 255, 1)',
+			    'rgba(0, 170, 220, 1)',			    
+			    'rgba(0, 80, 191, 1)',
+			    'rgba(0, 0, 170, 1)',
+			    'rgba(0, 0, 150, 1)',
+			    'rgba(0, 0, 127, 1)',
+			    'rgba(0, 0, 120, 1)',
+			    'rgba(0, 0, 100, 1)',
+			    'rgba(63, 0, 63, 1)',
+			    'rgba(127, 0, 0, 1)',
+			    'rgba(191, 0, 0, 1)',
+			    'rgba(255, 0, 0, 1)'
+			  ];
+			  GRADIENTNUM=0;
 			}
         // heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
         	heatmap.set('gradient',gradient);
